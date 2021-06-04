@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Weekly Meal Planner</title>
+  </head>
+  <body>
+
+  <div class="">
+    <!-- Nav bar -->
+    <button type="button" name="button">+ Week</button>
+    <button type="button" name="button">Delete Selected</button>
+    <h1>Weekly Meal Planner</h1>
+    <button type="button" name="button">⚙️</button>
+  </div>
+
+  <div class="">
+    <!-- Table -->
+    <table>
+      <tr>
+        <td>Delete?</td>
+        <td>Day</td>
+        <td>Meal</td>
+        <td>Source</td>
+        <td>Page</td>
+        <td>Recipe</td>
+        <td>Quality</td>
+        <td>Effort</td>
+        <td>Time</td>
+      </tr>
+      <% entries.forEach(function(entry){ %>
+        <tr>
+          <td><input type="checkbox" name="" value=""></td>
+          <td><input type="date" name="" value="1994-05-04"> </td>
+          <td><input type="text" name="" value="☀️"></td>
+          <td><input type="text" name="" value="Miguel Barclay Pink"></td>
+          <td><input type="number" name="" value=""></td>
+          <td><input type="text" name="" value="Burritos"></td>
+          <td><input type="text" name="" value="😁"></td>
+          <td><input type="text" name="" value="🔝"></td>
+          <td><input type="text" name="" value="🕐"></td>
+        </tr>
+      <% }) %>
+    </table>
+  </div>
+
+  <form class="" action="/new-single-entry" method="post">
+    <div class="">
+      <button type="submit" name="button">+</button>
+    </div>
+  </form>
+
+  </body>
+</html>
