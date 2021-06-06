@@ -10,10 +10,12 @@
 
   <div class="">
     <!-- Nav bar -->
-    <button type="button" name="button">+ Week</button>
-    <button type="button" name="button">Delete Selected</button>
+    <form class="" action="/new-week-entry" method="post">
+      <button type="submit" name="button">+ Week</button>
+    </form>
     <h1>Weekly Meal Planner</h1>
     <button type="button" name="button">⚙️</button>
+    <a href="/add-book">Add new book</a>
   </div>
 
   <div class="">
@@ -22,6 +24,7 @@
       <tr>
         <td>Delete?</td>
         <td>Day</td>
+        <td>Weekday</td>
         <td>Meal</td>
         <td>In/Out</td>
         <td>Source</td>
@@ -34,13 +37,14 @@
       <% entries.forEach(function(entry){ %>
       <form class="" action="/table-change" method="post">
         <tr>
-          <td><input type="checkbox" name="active-checkbox" value=""></td>
+          <td><input type="checkbox" name="activeCheckbox" value="" onchange="this.form.submit()"></td>
           <td><input type="date" name="date" value="<%= entry.date.toISOString().split('T')[0] %>" onchange="this.form.submit()"> </td>
+          <td><%= entry.date.toLocaleString('en-us', {  weekday: 'long' })%></td>
           <td><input type="text" name="meal" value="<%= entry.meal %>" onchange="this.form.submit()"></td>
           <% if(entry.inOut){ %>
           <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()" checked></td>
           <% }else{ %>
-          <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()"></td>  
+          <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()"></td>
           <% } %>
 
           <% if(entry.source!==null&&entry.source!==undefined){ %>

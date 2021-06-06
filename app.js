@@ -58,7 +58,7 @@ let entries = []; //This array will hold the entries that are displayed in the w
 
 app.get("/",function(req,res){
 
-  Entry.find({active:true}).populate('recipe').exec(function(err,foundEntries){
+  Entry.find({active:true}).populate('recipe').sort({date:1}).exec(function(err,foundEntries){
     if(!err){
       if(foundEntries.length>0){
         entries = foundEntries
@@ -70,17 +70,88 @@ app.get("/",function(req,res){
   });
 
 
+});
+
+app.get("/add-book",function(req,res){
+  res.render("addbook",{})
+})
+
+app.post("/add-book-entry",function(req,res){
+  if(req.body.name!==""&&req.body.author!==""&&req.body.alias!==""){
+    let newBook = new Source({
+      name:req.body.name,
+      author:req.body.author,
+      alias:req.body.alias
+    })
+    newBook.save();
+    res.redirect("/");
+  }else{
+
+  }
 })
 
 app.post("/new-single-entry",function(req,res){
-  let newEntry = new Entry({
-    date:new Date(),
-    active:true,
-    inOut:true
-  })
-    newEntry.save();
-    res.redirect("/");
+  try{
+    addDate();
+  }
+  catch{
+
+  }
+  res.redirect("/");
 })
+
+app.post("/new-week-entry",function(req,res){
+  try{
+    Entry.aggregate([
+      {
+        "$group":{
+          "_id":null,
+          "date":{"$max":"$date"}
+        }
+      }
+    ]).exec(function(err,result){
+      let lastDate = result[0].date;
+      let daysToAdd = 7;
+      for(var i=0;i<daysToAdd;i++){
+        let newDate = new Date();
+        newDate.setDate(lastDate.getDate()+1+i);
+        addDate("Dinner",false,true,newDate);
+        if(newDate.getDay()===6||newDate.getDay()===0){
+          addDate("Dinner",true,true,newDate);
+        }
+      }
+      res.redirect("/");
+    });
+  }
+  catch{
+  }
+})
+
+function addDate(chosenMeal="Dinner",mealOverride=false,dateOverride=false,date=new Date){
+  Entry.aggregate([
+    {
+      "$group":{
+        "_id":null,
+        "date":{"$max":"$date"}
+      }
+    }
+  ]).exec(function(err,result){
+    let newEntry = new Entry({
+      date:date,
+      active:true,
+      inOut:true,
+      meal:chosenMeal
+    });
+    if(result.length>0&&!dateOverride){
+      newEntry.date.setDate(result[0].date.getDate()+1);
+    }
+      if((newEntry.date.getDay()===6||newEntry.date.getDay()===0)&&!mealOverride){
+        newEntry.meal = "Lunch";
+      };
+      newEntry.save();
+      dateAdded = newEntry.date;
+  });
+}
 
 //Post request for when an item changes in the table - this will do most of the logic required!
 app.post("/table-change",function(req,res){
@@ -88,6 +159,10 @@ app.post("/table-change",function(req,res){
 
   Entry.findById(req.body.id,function(err,entry){
     if(!err){
+      //Check whether item should be "deleted"
+      if(req.body.activeCheckbox!==undefined){
+        entry.active = false;
+      }
       //Date update
       if(Date.parse(req.body.date)!==entry.date){
         entry.date = Date.parse(req.body.date);
@@ -206,16 +281,12 @@ app.post("/table-change",function(req,res){
 
 
   });
-
-  // date: '2021-06-05',
-  //   meal: 'Lunch',
-  //   source: '',
-  //   page: '',
-  //   recipeName: '',
-  //   rating: '',
-  //   effort: '',
-  //   time: '',
   //   id: '60bb38b75492750830a21198'
+})
+
+app.post("/delete-entries",function(req,res){
+  console.log(req);
+  res.redirect("/");
 })
 
 app.listen(3000, function() {
