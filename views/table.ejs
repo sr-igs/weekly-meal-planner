@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Weekly Meal Planner</title>
-  </head>
-  <body>
+
+<head>
+  <meta charset="utf-8">
+  <title>Weekly Meal Planner</title>
+</head>
+
+<body>
 
   <div class="">
     <!-- Nav bar -->
@@ -29,18 +31,32 @@
         <td>Time</td>
       </tr>
       <% entries.forEach(function(entry){ %>
+      <form class="" action="/table-change" method="post">
         <tr>
-          <td><input type="checkbox" name="" value=""></td>
-          <td><input type="date" name="" value="1994-05-04"> </td>
-          <td><input type="text" name="" value="☀️"></td>
-          <td><input type="text" name="" value="Miguel Barclay Pink"></td>
-          <td><input type="number" name="" value=""></td>
-          <td><input type="text" name="" value="Burritos"></td>
-          <td><input type="text" name="" value="😁"></td>
-          <td><input type="text" name="" value="🔝"></td>
-          <td><input type="text" name="" value="🕐"></td>
+          <td><input type="checkbox" name="active-checkbox" value=""></td>
+          <td><input type="date" name="date" value="<%= entry.date.toISOString().split('T')[0] %>" onchange="this.form.submit()"> </td>
+          <td><input type="text" name="meal" value="<%= entry.meal %>" onchange="this.form.submit()"></td>
+          <% if(entry.source!==undefined){ %>
+            <td><input type="text" name="meal" value="<%= entry.source.alias %>" onchange="this.form.submit()"></td>
+          <% }else{ %>
+            <td><input type="text" name="meal" value="" onchange="this.form.submit()"></td>
+          <% } %>
+          <td><input type="number" name="page" value="<%= entry.page %>"></td>
+          <% if(entry.recipe!==undefined){ %>
+            <td><input type="text" name="recipeName" value="<%= entry.recipe.name %>" onchange="this.form.submit()"></td>
+            <td><input type="text" name="rating" value="<%= entry.recipe.rating %>" onchange="this.form.submit()"></td>
+            <td><input type="text" name="effort" value="<%= entry.recipe.effort %>" onchange="this.form.submit()"></td>
+            <td><input type="text" name="time" value="<%= entry.recipe.time %>" onchange="this.form.submit()"></td>
+          <% }else{ %>
+            <td><input type="text" name="recipeName" value="" onchange="this.form.submit()"></td>
+            <td><input type="text" name="rating" value="" onchange="this.form.submit()"></td>
+            <td><input type="text" name="effort" value="" onchange="this.form.submit()"></td>
+            <td><input type="text" name="time" value="" onchange="this.form.submit()"></td>
+          <% } %>
+          <input type="hidden" name="id" value="<%= entry._id %>">
         </tr>
-      <% }) %>
+      </form>
+      <% }); %>
     </table>
   </div>
 
@@ -50,5 +66,6 @@
     </div>
   </form>
 
-  </body>
+</body>
+
 </html>
