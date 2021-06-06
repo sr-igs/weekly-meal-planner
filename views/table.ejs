@@ -36,20 +36,20 @@
           <td><input type="checkbox" name="active-checkbox" value=""></td>
           <td><input type="date" name="date" value="<%= entry.date.toISOString().split('T')[0] %>" onchange="this.form.submit()"> </td>
           <td><input type="text" name="meal" value="<%= entry.meal %>" onchange="this.form.submit()"></td>
-          <% if(entry.source!==undefined){ %>
-            <td><input type="text" name="meal" value="<%= entry.source.alias %>" onchange="this.form.submit()"></td>
+          <% if(entry.source!==null&&entry.source!==undefined){ %>
+            <td><input type="text" name="source" value="<%= entry.source.alias %>" onchange="this.form.submit()"></td>
           <% }else{ %>
-            <td><input type="text" name="meal" value="" onchange="this.form.submit()"></td>
+            <td><input type="text" name="source" value="" onchange="this.form.submit()"></td>
           <% } %>
-          <td><input type="number" name="page" value="<%= entry.page %>"></td>
-          <% if(entry.recipe!==undefined){ %>
-            <td><input type="text" name="recipeName" value="<%= entry.recipe.name %>" onchange="this.form.submit()"></td>
-            <td><input type="text" name="rating" value="<%= entry.recipe.rating %>" onchange="this.form.submit()"></td>
+          <td><input type="number" name="page" value="<%= entry.page %>" onchange="this.form.submit()"></td>
+          <% if(entry.recipe!==undefined&&entry.recipe!==null){ %>
+            <td><input type="text" name="recipe" value="<%= entry.recipe.name %>" onchange="this.form.submit()"></td>
+            <td><input type="text" name="quality" value="<%= entry.recipe.quality %>" onchange="this.form.submit()"></td>
             <td><input type="text" name="effort" value="<%= entry.recipe.effort %>" onchange="this.form.submit()"></td>
             <td><input type="text" name="time" value="<%= entry.recipe.time %>" onchange="this.form.submit()"></td>
           <% }else{ %>
-            <td><input type="text" name="recipeName" value="" onchange="this.form.submit()"></td>
-            <td><input type="text" name="rating" value="" onchange="this.form.submit()"></td>
+            <td><input type="text" name="recipe" value="" onchange="this.form.submit()"></td>
+            <td><input type="text" name="quality" value="" onchange="this.form.submit()"></td>
             <td><input type="text" name="effort" value="" onchange="this.form.submit()"></td>
             <td><input type="text" name="time" value="" onchange="this.form.submit()"></td>
           <% } %>

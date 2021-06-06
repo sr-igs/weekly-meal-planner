@@ -23,8 +23,9 @@ const Source = mongoose.model("Source",sourceSchema);
 
 const recipeSchema = {
   source: {type: sourceSchema,required:true},
+  sourceAlias:"",
   page: {type:Number,required:true},
-  recipe: {type:String,required:true},
+  name: {type:String,required:true},
   quality:String,
   effort:String,
   time:String
@@ -96,8 +97,12 @@ app.post("/table-change",function(req,res){
         entry.meal = req.body.meal
       };
       //Some more complex logic here:
+      let sourceAlias = ""
+      if(entry.source!==undefined&&entry.source!==null){
+        sourceAlias = entry.source.alias
+      }
 
-      if(req.body.source!==entry.source){
+      if(req.body.source!==sourceAlias){
         Source.findOne({alias:req.body.source},function(err,foundSource){
           if(!err){
             console.log(foundSource);
@@ -113,6 +118,78 @@ app.post("/table-change",function(req,res){
           }
         })
       };
+
+      if(req.body.page!==entry.page){
+        entry.page = req.body.page;
+      }
+
+      //Update recipe
+      if(req.body.source!==""&&req.body.page!==""){
+        //There should be a recipe
+        if(req.body.recipe==""||(req.body.source!==sourceAlias||req.body.page!==entry.page)){
+          //There was no recipe here before, therefore needs to be either found in the DB or added
+          //First, let's see if the recipe already exists
+          Recipe.find({sourceAlias:req.body.source,page:req.body.page},function(err,foundRecipes){
+            if(!err){
+              if(foundRecipes.length===0){
+                //Recipe doesn't exists
+                const newRecipe = new Recipe({
+                  source: entry.source,
+                  sourceAlias:entry.source.alias,
+                  page: req.body.page,
+                  name: "New Recipe",
+                  quality:"N/A",
+                  effort:"N/A",
+                  time:"N/A"
+                });
+                newRecipe.save();
+                Entry.findByIdAndUpdate(req.body.id,{recipe:newRecipe},function(err){
+                  if(!err){
+                    console.log("Succesfully updated entry");
+                  }else{
+                    console.log(err);
+                  }
+                })
+              }else{
+                //Recipe exists
+                Entry.findByIdAndUpdate(req.body.id,{recipe:foundRecipes[0]},function(err){
+                  if(!err){
+                    console.log("Succesfully updated entry");
+                  }else{
+                    console.log(err);
+                  }
+                })
+              }
+            }else{
+              console.log(err);
+            }
+          })
+        }
+      }else{
+        //One of them is empty, if there is a recipe field in the entry erase it
+        if(entry.recipe!==undefined){
+          Entry.findByIdAndUpdate(req.body.id,{recipe:undefined},function(err){
+            if(!err){
+              console.log("Succesfully updated entry");
+            }else{
+              console.log(err);
+            }
+          })
+        }
+      };
+
+      //If there is a recipe, check all values and update accordingly
+      if(req.body.recipe!==""&&entry.recipe!==undefined&&entry.recipe!==null){
+        //Check all the values of the recipe
+        Recipe.findByIdAndUpdate(entry.recipe._id,{name:req.body.recipe,quality:req.body.quality,effort:req.body.effort,time:req.body.time},function(err){
+          if(!err){
+            console.log("Succesfully updated recipe");
+          }else{
+            console.log(err);
+          }
+        });
+      };
+
 
       entry.save();
       res.redirect("/");
