@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const _ = require("lodash");
+const Schema = mongoose.Schema;
 
 const app = express();
 app.use(express.static("public"));
@@ -36,12 +37,10 @@ const Recipe = mongoose.model("Recipe",recipeSchema);
 const entrySchema = {
   date:{type:Date,required:true},
   meal:String,
+  inOut:{type:Boolean,required:true},
   source: {type:sourceSchema,required:false}, //This will be selected from a drop down list
   page: Number, //Chosen by user
-  recipe:{type:recipeSchema,required:false},
-  //Upon source or page change, script checks whether recipe exists in database.
-  //If Y: Reference ID to this entry
-  //If N: Shows "Not found" in DB, if user updates text field, it then updates the recipe DB
+  recipe:{type:Schema.Types.ObjectId,ref:'Recipe',required:false},
   active:{type:Boolean,required:true}
 }
 
@@ -59,7 +58,7 @@ let entries = []; //This array will hold the entries that are displayed in the w
 
 app.get("/",function(req,res){
 
-  Entry.find({active:true},function(err,foundEntries){
+  Entry.find({active:true}).populate('recipe').exec(function(err,foundEntries){
     if(!err){
       if(foundEntries.length>0){
         entries = foundEntries
@@ -76,7 +75,8 @@ app.get("/",function(req,res){
 app.post("/new-single-entry",function(req,res){
   let newEntry = new Entry({
     date:new Date(),
-    active:true
+    active:true,
+    inOut:true
   })
     newEntry.save();
     res.redirect("/");
@@ -96,6 +96,12 @@ app.post("/table-change",function(req,res){
       if(req.body.meal!==""){
         entry.meal = req.body.meal
       };
+
+      if(req.body.inOut!==undefined){
+        entry.inOut = true;
+      }else{
+        entry.inOut = false;
+      }
       //Some more complex logic here:
       let sourceAlias = ""
       if(entry.source!==undefined&&entry.source!==null){
@@ -143,7 +149,7 @@ app.post("/table-change",function(req,res){
                   time:"N/A"
                 });
                 newRecipe.save();
-                Entry.findByIdAndUpdate(req.body.id,{recipe:newRecipe},function(err){
+                Entry.findByIdAndUpdate(req.body.id,{recipe:newRecipe._id},function(err){
                   if(!err){
                     console.log("Succesfully updated entry");
                   }else{
@@ -152,7 +158,7 @@ app.post("/table-change",function(req,res){
                 })
               }else{
                 //Recipe exists
-                Entry.findByIdAndUpdate(req.body.id,{recipe:foundRecipes[0]},function(err){
+                Entry.findByIdAndUpdate(req.body.id,{recipe:foundRecipes[0]._id},function(err){
                   if(!err){
                     console.log("Succesfully updated entry");
                   }else{
@@ -181,7 +187,7 @@ app.post("/table-change",function(req,res){
       //If there is a recipe, check all values and update accordingly
       if(req.body.recipe!==""&&entry.recipe!==undefined&&entry.recipe!==null){
         //Check all the values of the recipe
-        Recipe.findByIdAndUpdate(entry.recipe._id,{name:req.body.recipe,quality:req.body.quality,effort:req.body.effort,time:req.body.time},function(err){
+        Recipe.findByIdAndUpdate(entry.recipe,{name:req.body.recipe,quality:req.body.quality,effort:req.body.effort,time:req.body.time},function(err){
           if(!err){
             console.log("Succesfully updated recipe");
           }else{

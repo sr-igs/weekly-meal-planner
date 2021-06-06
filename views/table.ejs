@@ -23,6 +23,7 @@
         <td>Delete?</td>
         <td>Day</td>
         <td>Meal</td>
+        <td>In/Out</td>
         <td>Source</td>
         <td>Page</td>
         <td>Recipe</td>
@@ -36,6 +37,12 @@
           <td><input type="checkbox" name="active-checkbox" value=""></td>
           <td><input type="date" name="date" value="<%= entry.date.toISOString().split('T')[0] %>" onchange="this.form.submit()"> </td>
           <td><input type="text" name="meal" value="<%= entry.meal %>" onchange="this.form.submit()"></td>
+          <% if(entry.inOut){ %>
+          <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()" checked></td>
+          <% }else{ %>
+          <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()"></td>  
+          <% } %>
+
           <% if(entry.source!==null&&entry.source!==undefined){ %>
             <td><input type="text" name="source" value="<%= entry.source.alias %>" onchange="this.form.submit()"></td>
           <% }else{ %>
