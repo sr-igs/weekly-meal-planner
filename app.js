@@ -11,7 +11,7 @@ app.set('view engine','ejs');
 
 app.use(bodyParser.urlencoded({extended:true}));
 
-mongoose.connect("mongodb://localhost:27017/mealplannerDB", {useNewUrlParser: true,useUnifiedTopology: true});
+mongoose.connect("mongodb+srv://admin-iggy:Testing1234@cluster0.saqoi.mongodb.net/mealplannerDB", {useNewUrlParser: true,useUnifiedTopology: true});
 
 // Schemas - can we create this in a different document to make the app.js smaller????
 const sourceSchema = {
@@ -46,13 +46,6 @@ const entrySchema = {
 
 const Entry = mongoose.model("Entry",entrySchema);
 
-const first_book = new Source({
-  name:"Storecupboard One Pound Meals",
-  author:"Miguel Barclay",
-  alias:"MB Pink"
-});
-// first_book.save();
-
 let entries = []; //This array will hold the entries that are displayed in the website table.
 //I will probably need to add some db read, with some properties
 
@@ -63,7 +56,17 @@ app.get("/",function(req,res){
       if(foundEntries.length>0){
         entries = foundEntries
       };
-      res.render("table",{entries:entries})
+      Source.find({}).exec(function(err,foundSources){
+        if(!err){
+          let sourceAlias = [];
+          foundSources.forEach(function(source){
+            sourceAlias.push(source.alias);
+          });
+          res.render("table",{entries:entries,sources:sourceAlias})
+        }else{
+          console.log(err);
+        }
+      })
     }else{
       console.log(err);
     }
@@ -91,17 +94,15 @@ app.post("/add-book-entry",function(req,res){
 })
 
 app.post("/new-single-entry",function(req,res){
-  try{
-    addDate();
-  }
-  catch{
+  let myPromise = addDate();
+  myPromise.then(function(value){
+    res.redirect("/");
+  },function(error){
 
-  }
-  res.redirect("/");
-})
+  });
+});
 
 app.post("/new-week-entry",function(req,res){
-  try{
     Entry.aggregate([
       {
         "$group":{
@@ -112,23 +113,26 @@ app.post("/new-week-entry",function(req,res){
     ]).exec(function(err,result){
       let lastDate = result[0].date;
       let daysToAdd = 7;
+      let promises = [];
       for(var i=0;i<daysToAdd;i++){
         let newDate = new Date();
         newDate.setDate(lastDate.getDate()+1+i);
-        addDate("Dinner",false,true,newDate);
+        let new_promise = addDate("Dinner",false,true,newDate);
+        promises.push(new_promise);
         if(newDate.getDay()===6||newDate.getDay()===0){
-          addDate("Dinner",true,true,newDate);
+          let other_promise=addDate("Dinner",true,true,newDate);
+          promises.push(other_promise);
         }
       }
-      res.redirect("/");
+      Promise.all(promises).then((values) => {
+        res.redirect("/");
+      })
     });
-  }
-  catch{
-  }
 })
 
 function addDate(chosenMeal="Dinner",mealOverride=false,dateOverride=false,date=new Date){
-  Entry.aggregate([
+  let promise = new Promise(function(myResolve,myReject){
+    Entry.aggregate([
     {
       "$group":{
         "_id":null,
@@ -150,7 +154,10 @@ function addDate(chosenMeal="Dinner",mealOverride=false,dateOverride=false,date=
       };
       newEntry.save();
       dateAdded = newEntry.date;
+      myResolve();
   });
+});
+return promise
 }
 
 //Post request for when an item changes in the table - this will do most of the logic required!

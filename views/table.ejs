@@ -40,18 +40,30 @@
           <td><input type="checkbox" name="activeCheckbox" value="" onchange="this.form.submit()"></td>
           <td><input type="date" name="date" value="<%= entry.date.toISOString().split('T')[0] %>" onchange="this.form.submit()"> </td>
           <td><%= entry.date.toLocaleString('en-us', {  weekday: 'long' })%></td>
-          <td><input type="text" name="meal" value="<%= entry.meal %>" onchange="this.form.submit()"></td>
+          <td><input type="text" name="meal" value="<%= entry.meal %>" onchange="this.form.submit()" list="lunch-dinner"></td>
           <% if(entry.inOut){ %>
           <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()" checked></td>
           <% }else{ %>
           <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()"></td>
           <% } %>
 
+          <datalist class="" id="lunch-dinner">
+            <option value="Lunch">
+            <option value="Dinner">
+          </datalist>
+
           <% if(entry.source!==null&&entry.source!==undefined){ %>
-            <td><input type="text" name="source" value="<%= entry.source.alias %>" onchange="this.form.submit()"></td>
+            <td><input type="text" name="source" value="<%= entry.source.alias %>" onchange="this.form.submit()" list="available-sources"></td>
           <% }else{ %>
-            <td><input type="text" name="source" value="" onchange="this.form.submit()"></td>
+            <td><input type="text" name="source" value="" onchange="this.form.submit()" list="available-sources"></td>
           <% } %>
+
+          <datalist class="" id="available-sources">
+          <% sources.forEach(function(source){ %>
+            <option value="<%= source %>">
+          <% }) %>
+          </datalist>
+
           <td><input type="number" name="page" value="<%= entry.page %>" onchange="this.form.submit()"></td>
           <% if(entry.recipe!==undefined&&entry.recipe!==null){ %>
             <td><input type="text" name="recipe" value="<%= entry.recipe.name %>" onchange="this.form.submit()"></td>
@@ -77,6 +89,9 @@
     </div>
   </form>
 
+  <!-- <script type="text/javascript">
+  createEditableSelect(document.forms[0].myText);
+  </script> -->
 </body>
 
 </html>
