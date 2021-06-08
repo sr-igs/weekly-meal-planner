@@ -4,35 +4,44 @@
 <head>
   <meta charset="utf-8">
   <title>Weekly Meal Planner</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body>
 
-  <div class="">
+  <div class="row title-div">
     <!-- Nav bar -->
-    <form class="" action="/new-week-entry" method="post">
-      <button type="submit" name="button">+ Week</button>
-    </form>
-    <h1>Weekly Meal Planner</h1>
-    <button type="button" name="button">⚙️</button>
-    <a href="/add-book">Add new book</a>
+    <div class="col">
+      <form class="" action="/new-week-entry" method="post">
+        <button type="submit" name="button">+ Week</button>
+      </form>
+    </div>
+    <div class="col">
+      <h1>Weekly Meal Planner</h1>
+    </div>
+    <div class="col">
+      <button type="button" name="button">⚙️</button>
+      <a href="/add-book">Add new book</a>
+    </div>
   </div>
 
   <div class="">
     <!-- Table -->
     <table>
       <tr>
-        <td>Delete?</td>
-        <td>Day</td>
-        <td>Weekday</td>
-        <td>Meal</td>
-        <td>In/Out</td>
-        <td>Source</td>
-        <td>Page</td>
-        <td>Recipe</td>
-        <td>Quality</td>
-        <td>Effort</td>
-        <td>Time</td>
+        <th>Delete?</th>
+        <th>Day</th>
+        <th>Weekday</th>
+        <th>Meal</th>
+        <th>In?</th>
+        <th>Source</th>
+        <th>Page</th>
+        <th>Recipe</th>
+        <th>Quality</th>
+        <th>Effort</th>
+        <th>Time</th>
       </tr>
       <% entries.forEach(function(entry){ %>
       <form class="" action="/table-change" method="post">
@@ -85,7 +94,7 @@
 
   <form class="" action="/new-single-entry" method="post">
     <div class="">
-      <button type="submit" name="button">+</button>
+      <button type="submit" name="button" class="btn btn-primary">+</button>
     </div>
   </form>
 

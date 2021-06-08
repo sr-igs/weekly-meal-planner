@@ -111,7 +111,10 @@ app.post("/new-week-entry",function(req,res){
         }
       }
     ]).exec(function(err,result){
-      let lastDate = result[0].date;
+      let lastDate = new Date();
+      if(result[0]!==null&&result[0]!==undefined){
+        let lastDate = result[0].date;
+      };
       let daysToAdd = 7;
       let promises = [];
       for(var i=0;i<daysToAdd;i++){
@@ -165,6 +168,7 @@ app.post("/table-change",function(req,res){
   console.log(req.body);
 
   Entry.findById(req.body.id,function(err,entry){
+    let promises = [];
     if(!err){
       //Check whether item should be "deleted"
       if(req.body.activeCheckbox!==undefined){
@@ -191,12 +195,13 @@ app.post("/table-change",function(req,res){
       }
 
       if(req.body.source!==sourceAlias){
-        Source.findOne({alias:req.body.source},function(err,foundSource){
+        let firstPromise=new Promise((myResolve,myReject)=>{Source.findOne({alias:req.body.source},function(err,foundSource){
           if(!err){
             console.log(foundSource);
             Entry.findByIdAndUpdate(req.body.id,{source:foundSource},function(err){
               if(!err){
                 console.log("Sucessfully updated entry");
+                myResolve();
               }else{
                 console.log(err);
               }
@@ -205,6 +210,8 @@ app.post("/table-change",function(req,res){
             console.log(err);
           }
         })
+      })
+      promises.push(firstPromise);
       };
 
       if(req.body.page!==entry.page){
@@ -217,7 +224,7 @@ app.post("/table-change",function(req,res){
         if(req.body.recipe==""||(req.body.source!==sourceAlias||req.body.page!==entry.page)){
           //There was no recipe here before, therefore needs to be either found in the DB or added
           //First, let's see if the recipe already exists
-          Recipe.find({sourceAlias:req.body.source,page:req.body.page},function(err,foundRecipes){
+          let secondPromise = new Promise((myResolve,myReject)=>{ Recipe.find({sourceAlias:req.body.source,page:req.body.page},function(err,foundRecipes){
             if(!err){
               if(foundRecipes.length===0){
                 //Recipe doesn't exists
@@ -234,6 +241,7 @@ app.post("/table-change",function(req,res){
                 Entry.findByIdAndUpdate(req.body.id,{recipe:newRecipe._id},function(err){
                   if(!err){
                     console.log("Succesfully updated entry");
+                    myResolve();
                   }else{
                     console.log(err);
                   }
@@ -243,6 +251,7 @@ app.post("/table-change",function(req,res){
                 Entry.findByIdAndUpdate(req.body.id,{recipe:foundRecipes[0]._id},function(err){
                   if(!err){
                     console.log("Succesfully updated entry");
+                    myResolve();
                   }else{
                     console.log(err);
                   }
@@ -252,38 +261,48 @@ app.post("/table-change",function(req,res){
               console.log(err);
             }
           })
+        });
+        promises.push(secondPromise);
         }
       }else{
         //One of them is empty, if there is a recipe field in the entry erase it
         if(entry.recipe!==undefined){
-          Entry.findByIdAndUpdate(req.body.id,{recipe:undefined},function(err){
+          let thirdPromise = new Promise((myResolve,myReject)=>{Entry.findByIdAndUpdate(req.body.id,{recipe:undefined},function(err){
             if(!err){
               console.log("Succesfully updated entry");
+              myResolve();
             }else{
               console.log(err);
-            }
+            };
           })
-        }
+      });
+      promises.push(thirdPromise);
       };
+    };
 
       //If there is a recipe, check all values and update accordingly
       if(req.body.recipe!==""&&entry.recipe!==undefined&&entry.recipe!==null){
         //Check all the values of the recipe
-        Recipe.findByIdAndUpdate(entry.recipe,{name:req.body.recipe,quality:req.body.quality,effort:req.body.effort,time:req.body.time},function(err){
+        let fourthPromise = new Promise((myResolve,myReject)=>{Recipe.findByIdAndUpdate(entry.recipe,{name:req.body.recipe,quality:req.body.quality,effort:req.body.effort,time:req.body.time},function(err){
           if(!err){
             console.log("Succesfully updated recipe");
+            myResolve();
           }else{
             console.log(err);
           }
         });
+      });
+      promises.push(fourthPromise);
       };
 
 
       entry.save();
-      res.redirect("/");
+      Promise.all(promises).then((values) => {
+        res.redirect("/");
+      });
 
     }else{
-      console.log(err);
+    console.log(err);
     };
 
 
