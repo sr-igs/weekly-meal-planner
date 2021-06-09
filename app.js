@@ -3,17 +3,16 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const _ = require("lodash");
 const Schema = mongoose.Schema;
+const databaseOps = require(__dirname+"/database_scripts.js")
 
 const app = express();
 app.use(express.static("public"));
-
 app.set('view engine','ejs');
-
 app.use(bodyParser.urlencoded({extended:true}));
-
 mongoose.connect("mongodb+srv://admin-iggy:Testing1234@cluster0.saqoi.mongodb.net/mealplannerDB", {useNewUrlParser: true,useUnifiedTopology: true});
 
 // Schemas - can we create this in a different document to make the app.js smaller????
+
 const sourceSchema = {
   name:{type:String,required:true},
   author:{type:String,required:true},
@@ -51,28 +50,11 @@ let entries = []; //This array will hold the entries that are displayed in the w
 
 app.get("/",function(req,res){
 
-  Entry.find({active:true}).populate('recipe').sort({date:1}).exec(function(err,foundEntries){
-    if(!err){
-      if(foundEntries.length>0){
-        entries = foundEntries
-      };
-      Source.find({}).exec(function(err,foundSources){
-        if(!err){
-          let sourceAlias = [];
-          foundSources.forEach(function(source){
-            sourceAlias.push(source.alias);
-          });
-          res.render("table",{entries:entries,sources:sourceAlias})
-        }else{
-          console.log(err);
-        }
-      })
-    }else{
-      console.log(err);
-    }
-  });
-
-
+let entryPromise = databaseOps.get_entries(Entry,Source);
+entryPromise.then(function(value){
+  res.render("table",{entries:value[0],sources:value[1]});
+},function(error){
+});
 });
 
 app.get("/add-book",function(req,res){

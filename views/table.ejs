@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-
-<head>
-  <meta charset="utf-8">
-  <title>Weekly Meal Planner</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="css/styles.css">
-</head>
+  <%- include("header") -%>
 
 <body>
 
@@ -48,23 +39,26 @@
       <% entries.forEach(function(entry){ %>
       <form class="" action="/table-change" method="post">
         <tr>
+          <!-- CHECKBOX,DATE,WEEKDAY,MEAL -->
           <td><input type="checkbox" name="activeCheckbox" value="" onchange="this.form.submit()"></td>
           <td><input type="date" name="date" value="<%= entry.date.toISOString().split('T')[0] %>" onchange="this.form.submit()" class="date-input"> </td>
           <td><%= entry.date.toLocaleString('en-us', {  weekday: 'long' })%></td>
           <td><input type="text" name="meal" value="<%= entry.meal %>" onchange="this.form.submit()" list="lunch-dinner" class="meal-input"></td>
+          <!-- IN OUT CHECKBOX -->
           <% if(entry.inOut){ %>
-          <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()" checked></td>
+          <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()" checked class="in-out-input"></td>
           <% }else{ %>
-          <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()"></td>
+          <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()" class="in-out-input"></td>
           <% } %>
-
+          <!-- SOURCE -->
           <% if(entry.source!==null&&entry.source!==undefined){ %>
-            <td><input type="text" name="source" value="<%= entry.source.alias %>" onchange="this.form.submit()" list="available-sources"></td>
+            <td><input type="text" name="source" value="<%= entry.source.alias %>" onchange="this.form.submit()" list="available-sources" class="source-input in-affected"></td>
           <% }else{ %>
-            <td><input type="text" name="source" value="" onchange="this.form.submit()" list="available-sources"></td>
+            <td><input type="text" name="source" value="" onchange="this.form.submit()" list="available-sources" class="source-input in-affected"></td>
           <% } %>
-
+          <!-- PAGE NUMBER -->
           <td><input type="number" name="page" value="<%= entry.page %>" onchange="this.form.submit()" class="page-input"></td>
+          <!-- RECIPE ATTRIBUTES:NAME,QUALITY,EFFORT,TIME -->
           <% if(entry.recipe!==undefined&&entry.recipe!==null){ %>
             <td><input type="text" name="recipe" value="<%= entry.recipe.name %>" onchange="this.form.submit()"></td>
             <td><input type="text" name="quality" value="<%= entry.recipe.quality %>" onchange="this.form.submit()" class="quality-input" list="quality-list"></td>
