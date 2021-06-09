@@ -4,9 +4,36 @@
   margin-bottom:1rem;
 }
 
+.date-input{
+  width: 8.5rem;
+}
 
-td th{
-  text-align:right;
-  width:1%;
-  white-space:nowrap;
+.meal-input{
+  width:5rem;
+}
+
+.page-input{
+  width:3rem;
+}
+
+.quality-input{
+  width:6rem;
+}
+
+.time-input{
+  width:6rem;
+}
+
+.effort-input{
+  width:8
+  rem;
+}
+
+.add-btn{
+  margin-left:3rem;
+}
+
+.footer{
+  margin: 2rem 0rem;
+  text-align: center;
 }
