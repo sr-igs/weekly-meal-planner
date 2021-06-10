@@ -2,8 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const _ = require("lodash");
-const Schema = mongoose.Schema;
-const databaseOps = require(__dirname+"/database_scripts.js")
+const databaseOps = require(__dirname+"/custom_modules/database_scripts.js");
+const customSchemas = require(__dirname+"/custom_modules/schemas.js");
 
 const app = express();
 app.use(express.static("public"));
@@ -12,67 +12,32 @@ app.use(bodyParser.urlencoded({extended:true}));
 mongoose.connect("mongodb+srv://admin-iggy:Testing1234@cluster0.saqoi.mongodb.net/mealplannerDB", {useNewUrlParser: true,useUnifiedTopology: true});
 
 // Schemas - can we create this in a different document to make the app.js smaller????
+const createdSchemas = customSchemas.getSchemas();
+const Source = createdSchemas.source;
+const Recipe = createdSchemas.recipe;
+const Entry = createdSchemas.entry;
 
-const sourceSchema = {
-  name:{type:String,required:true},
-  author:{type:String,required:true},
-  alias:{type:String,required:true}
-}
-
-const Source = mongoose.model("Source",sourceSchema);
-
-const recipeSchema = {
-  source: {type: sourceSchema,required:true},
-  sourceAlias:"",
-  page: {type:Number,required:true},
-  name: {type:String,required:true},
-  quality:String,
-  effort:String,
-  time:String
-};
-
-const Recipe = mongoose.model("Recipe",recipeSchema);
-
-const entrySchema = {
-  date:{type:Date,required:true},
-  meal:String,
-  inOut:{type:Boolean,required:true},
-  source: {type:sourceSchema,required:false}, //This will be selected from a drop down list
-  page: Number, //Chosen by user
-  recipe:{type:Schema.Types.ObjectId,ref:'Recipe',required:false},
-  active:{type:Boolean,required:true}
-}
-
-const Entry = mongoose.model("Entry",entrySchema);
 
 let entries = []; //This array will hold the entries that are displayed in the website table.
 //I will probably need to add some db read, with some properties
 
 app.get("/",function(req,res){
-
-let entryPromise = databaseOps.get_entries(Entry,Source);
-entryPromise.then(function(value){
-  res.render("table",{entries:value[0],sources:value[1]});
-},function(error){
+  let entryPromise = databaseOps.get_entries(Entry,Source);
+  entryPromise.then(function(value){
+    res.render("table",{entries:value[0],sources:value[1]});
+  },function(error){
+  });
 });
-});
 
+//Page that allows user to add new books to the Source database
 app.get("/add-book",function(req,res){
   res.render("addbook",{})
 })
 
+//Action that adds books to the Source database
 app.post("/add-book-entry",function(req,res){
-  if(req.body.name!==""&&req.body.author!==""&&req.body.alias!==""){
-    let newBook = new Source({
-      name:req.body.name,
-      author:req.body.author,
-      alias:req.body.alias
-    })
-    newBook.save();
+    databaseOps.add_book(req,Source);
     res.redirect("/");
-  }else{
-
-  }
 })
 
 app.post("/new-single-entry",function(req,res){
@@ -277,7 +242,6 @@ app.post("/table-change",function(req,res){
       promises.push(fourthPromise);
       };
 
-
       entry.save();
       Promise.all(promises).then((values) => {
         res.redirect("/");
@@ -290,11 +254,6 @@ app.post("/table-change",function(req,res){
 
   });
   //   id: '60bb38b75492750830a21198'
-})
-
-app.post("/delete-entries",function(req,res){
-  console.log(req);
-  res.redirect("/");
 })
 
 app.listen(3000, function() {

@@ -1,5 +1,5 @@
 exports.get_entries = function(entrydb,sourcedb){
-  
+
   let promise = new Promise((myResolve,myReject)=>{
     let entries=[];
     entrydb.find({active:true}).populate('recipe').sort({date:1}).exec(function(err,foundEntries){
@@ -26,3 +26,13 @@ exports.get_entries = function(entrydb,sourcedb){
 
 return promise;
 }
+
+exports.add_book = function(req,sourcedb){
+  if(req.body.name!==""&&req.body.author!==""&&req.body.alias!==""){
+    let newBook = new sourcedb({
+      name:req.body.name,
+      author:req.body.author,
+      alias:req.body.alias
+    })
+    newBook.save();
+}};
