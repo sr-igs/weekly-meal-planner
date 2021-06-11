@@ -36,3 +36,22 @@
   margin: 2rem 0rem;
   text-align: center;
 }
+
+/* Book Page */
+.book-header, .book-form{
+  text-align:center;
+}
+
+.book-header{
+  margin:2rem 0rem;
+}
+
+.book-table{
+  width:60%;
+  margin:auto;
+  margin-top:2rem;
+}
+
+.form-item{
+  margin-bottom:0.5rem;
+}

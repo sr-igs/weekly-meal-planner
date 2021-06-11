@@ -27,7 +27,7 @@ exports.get_entries = function(entrydb,sourcedb){
 return promise;
 }
 
-exports.add_book = function(req,sourcedb){
+exports.addBook = function(req,sourcedb){
   if(req.body.name!==""&&req.body.author!==""&&req.body.alias!==""){
     let newBook = new sourcedb({
       name:req.body.name,
@@ -36,3 +36,18 @@ exports.add_book = function(req,sourcedb){
     })
     newBook.save();
 }};
+
+exports.fetchBooks = function(sourcedb){
+  let promise = new Promise((myResolve,myReject)=>{
+    sourcedb.find({"author":{$ne:"N/A"}},(err,foundSources)=>{
+      console.log("Hello");
+      if(!err){
+         myResolve(foundSources);
+      }else{
+        console.log(err);
+        myReject(err);
+      }
+    });
+  });
+  return promise
+}

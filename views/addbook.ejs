@@ -1,22 +1,50 @@
   <%- include("header") -%>
 
   <body>
-    <h2>Add new book to database</h2>
-    <a href="/">Return to home page</a>
-    <form class="" action="/add-book-entry" method="post">
-      <label for="">Book Name:</label>
-      <input type="text" name="name" value="">
-      <br>
-      <label for="">Author:</label>
-      <input type="text" name="author" value="">
-      <br>
-      <label for="">Alias:</label>
-      <input type="text" name="alias" value="">
-      <br>
-      <button type="submit" name="button">Submit</button>
-    </form>
+    <div class="book-header">
+      <h2>Add new book to database</h2>
+      <a href="/">Return to home page</a>
+    </div>
+    <div class="book-form">
+      <form class="" action="/add-book-entry" method="post">
+        <div class="form-item">
+          <label for="">Book Name:</label>
+          <input type="text" name="name" value="">
+        </div>
+        <div class="form-item">
+          <label for="">Author:</label>
+          <input type="text" name="author" value="">
+        </div>
+        <div class="form-item">
+          <label for="">Alias:</label>
+          <input type="text" name="alias" value="">
+        </div>
+        <div class="form-item">
+          <button type="submit" name="button">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="book-table">
+      <h4>Existing Books:</h4>
+      <table class="table">
+        <tr>
+          <th>Book Name</th>
+          <th>Author</th>
+          <th>Alias</th>
+        </tr>
+        <!-- Here goes the table with the current books -->
+        <% books.forEach((book)=>{ %>
+        <tr>
+          <td><%= book.name %></td>
+          <td><%= book.author %></td>
+          <td><%= book.alias %></td>
+        </tr>
+        <% }); %>
+      </table>
+    </div>
 
     <%- include("footer") -%>
-
   </body>
-</html>
+
+  </html>

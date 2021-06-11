@@ -31,12 +31,17 @@ app.get("/",function(req,res){
 
 //Page that allows user to add new books to the Source database
 app.get("/add-book",function(req,res){
-  res.render("addbook",{})
+  let booksPromise = databaseOps.fetchBooks(Source);
+  booksPromise.then(function(value){
+    console.log(value);
+    res.render("addbook",{books:value})
+  },function(error){
+  });
 })
 
 //Action that adds books to the Source database
 app.post("/add-book-entry",function(req,res){
-    databaseOps.add_book(req,Source);
+    databaseOps.addBook(req,Source);
     res.redirect("/");
 })
 
