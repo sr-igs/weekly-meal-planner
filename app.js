@@ -58,27 +58,28 @@ app.post("/new-week-entry",function(req,res){
     Entry.aggregate([
       {
         "$group":{
-          "_id":null,
+           "_id":null,
           "date":{"$max":"$date"}
         }
       }
     ]).exec(function(err,result){
       let lastDate = new Date();
       if(result[0]!==null&&result[0]!==undefined){
-        let lastDate = result[0].date;
+        lastDate = result[0].date;
       };
       let daysToAdd = 7;
       let promises = [];
       for(var i=0;i<daysToAdd;i++){
         let newDate = new Date();
         newDate.setDate(lastDate.getDate()+1+i);
+        console.log(newDate);
         let new_promise = addDate("Dinner",false,true,newDate);
         promises.push(new_promise);
         if(newDate.getDay()===6||newDate.getDay()===0){
           let other_promise=addDate("Dinner",true,true,newDate);
           promises.push(other_promise);
-        }
-      }
+        };
+      };
       Promise.all(promises).then((values) => {
         res.redirect("/");
       })
