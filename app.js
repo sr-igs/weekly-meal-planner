@@ -262,6 +262,11 @@ app.post("/table-change",function(req,res){
   //   id: '60bb38b75492750830a21198'
 })
 
-app.listen(3000, function() {
+let port = process.env.PORT;
+if(port==null||port==""){
+  port=3000;
+};
+
+app.listen(port, function() {
   console.log("Server started on port 3000");
 });
