@@ -39,7 +39,7 @@ exports.addBook = function(req,sourcedb){
 
 exports.fetchBooks = function(sourcedb){
   let promise = new Promise((myResolve,myReject)=>{
-    sourcedb.find({"author":{$ne:"N/A"}},(err,foundSources)=>{
+    sourcedb.find({"author":{$ne:"N/A"}}).sort({"author":1}).exec((err,foundSources)=>{
       console.log("Hello");
       if(!err){
          myResolve(foundSources);
