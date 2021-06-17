@@ -260,6 +260,16 @@ app.post("/table-change",function(req,res){
 
   });
   //   id: '60bb38b75492750830a21198'
+});
+
+app.get("/form",(req,res)=>{
+  let today = new Date();
+  let currentInfoPromise = databaseOps.getEntryInfo(today,Entry);
+  currentInfoPromise.then((value)=>{
+    console.log(value);
+    res.render("form",{entryInfo:value})
+  })
+
 })
 
 let port = process.env.PORT;

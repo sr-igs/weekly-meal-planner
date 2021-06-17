@@ -1,0 +1,62 @@
+  <%- include("header") -%>
+
+  <body>
+    <div class="form-page-div form-main-inputs-div">
+
+      <h3 class="form-title"><strong>Meal Form</strong></h3>
+
+      <div class="form-page-div">
+        <label for="">Choose date:</label>
+        <input type="date" name="" value=<%= entryInfo.date.toISOString().split('T')[0] %>>
+      </div>
+
+      <div class="form-page-div">
+        <label for="">Choose meal:</label>
+        <select class="" name="">
+          <option value="">Lunch</option>
+          <option value="" selected="selected">Dinner</option>
+        </select>
+      </div>
+
+      <div class="form-page-div">
+        <button type="button" name="button" class="btn btn-secondary">Refresh</button>
+      </div>
+
+    </div>
+
+    <div class="form-page-div">
+      <label for="">Meal:</label>
+      <input type="text" name="" value="<%= entryInfo.recipe.name %>" readonly>
+    </div>
+
+    <div class="form-page-div">
+      <label for="">Quality:</label>
+      <select class="" name="">
+        <option value="">Not again</option>
+        <option value="">Good</option>
+        <option value="">Very Good</option>
+        <option value="">Outstanding</option>
+      </select>
+    </div>
+
+    <div class="form-page-div">
+      <label for="">Effort:</label>
+      <select class="" name="">
+        <option value="">Cath Friendly</option>
+        <option value="">Some Effort</option>
+        <option value="">Lots of Effort</option>
+      </select>
+    </div>
+
+    <div class="form-page-div">
+      <label for="">Time:</label>
+      <select class="" name="">
+        <option value="">
+          <30 mins</option>
+        <option value="">30-60 mins</option>
+        <option value="">>60 mins</option>
+      </select>
+    </div>
+
+    <%- include("footer") -%>
+  </body>

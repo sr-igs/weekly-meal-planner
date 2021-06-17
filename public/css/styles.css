@@ -55,3 +55,21 @@
 .form-item{
   margin-bottom:0.5rem;
 }
+
+.form-page-div{
+  text-align:center;
+  margin-top:1rem;
+}
+
+.form-main-inputs-div{
+  background-color:gainsboro;
+  padding: 1rem;
+  width:20rem;
+  margin:auto;
+  border-radius:25px;
+  margin-top:2rem;
+}
+
+.form-title{
+
+}

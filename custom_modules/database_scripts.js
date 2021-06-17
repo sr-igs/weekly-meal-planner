@@ -50,4 +50,30 @@ exports.fetchBooks = function(sourcedb){
     });
   });
   return promise
+};
+
+exports.getEntryInfo = (date,entrydb)=>{
+  let tomorrow = new Date();
+  let yesterday = new Date();
+  tomorrow.setDate(date.getDate()+1);
+  yesterday.setDate(date.getDate()-1);
+
+  let newPromise = new Promise((myResolve,myReject)=>{
+    entrydb.find({
+      date:{"$gt":yesterday,"$lt":tomorrow},
+      "meal":"Dinner"
+    }).populate('recipe').exec((err,results)=>{
+      if(!err){
+        if(results.length>0){
+          myResolve(results[0]);
+        }else{
+          return null
+        }
+      }else{
+        console.log(err);
+        myReject()
+      }
+    })
+  });
+  return newPromise;
 }
