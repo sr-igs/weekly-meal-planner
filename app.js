@@ -264,12 +264,45 @@ app.post("/table-change",function(req,res){
 
 app.get("/form",(req,res)=>{
   let today = new Date();
-  let currentInfoPromise = databaseOps.getEntryInfo(today,Entry);
+  let currentInfoPromise = databaseOps.getEntryInfo(today,Entry,"Dinner");
   currentInfoPromise.then((value)=>{
     console.log(value);
     res.render("form",{entryInfo:value})
   })
+})
 
+app.post("/form-refresh",(req,res)=>{
+  let meal = req.body.chosenMeal;
+  let date = new Date(req.body.date);
+  console.log(meal);
+  console.log(date);
+  let promise = databaseOps.getEntryInfo(date,Entry,meal);
+  promise.then((value)=>{
+    console.log(value);
+    res.render("form",{entryInfo:value})
+  })
+});
+
+app.post("/form-entry",(req,res)=>{
+  console.log(req.body);
+  let updateObject = {
+    quality:req.body.quality,
+    time:req.body.time,
+    effort:req.body.effort
+  }
+  if(req.body.entry_id!=="N/A"&&req.body.entry_id===null&&req.body.entry_id!==undefined){
+    Recipe.findByIdAndUpdate(req.body.entry_id,updateObject,(err,result)=>{
+      if(!err){
+        console.log("Form succesefully submitted and recipe updated");
+        res.redirect("/")
+      }else{
+        console.log(err);
+        res.redirect("/form")
+      }
+    })
+  }else{
+    res.redirect("/")
+  }
 })
 
 let port = process.env.PORT;

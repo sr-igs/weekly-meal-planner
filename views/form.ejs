@@ -1,62 +1,101 @@
   <%- include("header") -%>
 
   <body>
+    <form class="" action="/form-refresh" method="post">
     <div class="form-page-div form-main-inputs-div">
 
       <h3 class="form-title"><strong>Meal Form</strong></h3>
 
       <div class="form-page-div">
         <label for="">Choose date:</label>
-        <input type="date" name="" value=<%= entryInfo.date.toISOString().split('T')[0] %>>
+        <input type="date" name="date" value=<%= entryInfo.date.toISOString().split('T')[0] %>>
       </div>
 
       <div class="form-page-div">
         <label for="">Choose meal:</label>
-        <select class="" name="">
-          <option value="">Lunch</option>
-          <option value="" selected="selected">Dinner</option>
+        <select class="" name="chosenMeal">
+          <% if(entryInfo.meal==="Lunch"){ %>
+            <option value="Lunch" selected="selected">Lunch</option>
+            <option value="Dinner">Dinner</option>
+          <% }else{ %>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner" selected="selected">Dinner</option>
+          <% } %>
         </select>
       </div>
 
       <div class="form-page-div">
-        <button type="button" name="button" class="btn btn-secondary">Refresh</button>
+        <button type="submit" name="button" class="btn btn-secondary">Refresh</button>
       </div>
 
     </div>
+    </form>
 
-    <div class="form-page-div">
-      <label for="">Meal:</label>
-      <input type="text" name="" value="<%= entryInfo.recipe.name %>" readonly>
-    </div>
+    <form class="" action="/form-entry" method="post">
+      <div class="form-page-div">
+        <label for=""><strong>Meal:</strong></label>
+        <% if(entryInfo.recipe===null||entryInfo.recipe===undefined){ %>
+        <p>No Recipe Found</p>
+        <input type="hidden" name="entry_id" value="N/A">
+        <% }else{ %>
+        <input type="hidden" name="entry_id" value=<%= entryInfo.recipe._id %> >
+        <p><%= entryInfo.recipe.name %></p>
+        <% } %>
+      </div>
 
-    <div class="form-page-div">
-      <label for="">Quality:</label>
-      <select class="" name="">
-        <option value="">Not again</option>
-        <option value="">Good</option>
-        <option value="">Very Good</option>
-        <option value="">Outstanding</option>
-      </select>
-    </div>
+      <div class="form-page-div">
+        <label for="">Quality:</label>
+        <select class="" name="quality">
+          <% if(entryInfo.recipe!==undefined&&entryInfo.recipe!==null){ %>
+            <option <%if (entryInfo.recipe.quality==="Not again") {%>  selected="selected"  <%}%> value="Not again">Not again</option>
+            <option <%if (entryInfo.recipe.quality==="Good") {%>  selected="selected"  <%}%> value="Good">Good</option>
+            <option <%if (entryInfo.recipe.quality==="Very Good") {%>  selected="selected"  <%}%> value="Very Good">Very Good</option>
+            <option <%if (entryInfo.recipe.quality==="Outstanding") {%>  selected="selected"  <%}%> value="Outstanding">Outstanding</option>
+          <% }else{ %>
+            <option value="Not again">Not again</option>
+            <option value="Good">Good</option>
+            <option value="Very Good">Very Good</option>
+            <option alue="Outstanding">Outstanding</option>
+          <% } %>
+        </select>
+      </div>
 
-    <div class="form-page-div">
-      <label for="">Effort:</label>
-      <select class="" name="">
-        <option value="">Cath Friendly</option>
-        <option value="">Some Effort</option>
-        <option value="">Lots of Effort</option>
-      </select>
-    </div>
+      <div class="form-page-div">
+        <label for="">Effort:</label>
+        <select class="" name="effort">
+          <% if(entryInfo.recipe!==undefined&&entryInfo.recipe!==null){ %>
+            <option <%if (entryInfo.recipe.effort==="Cath friendly") {%>  selected="selected"  <%}%> value="Cath friendly">Cath friendly</option>
+            <option <%if (entryInfo.recipe.effort==="Some effort") {%>  selected="selected"  <%}%> value="Some efoort">Some effort</option>
+            <option <%if (entryInfo.recipe.effort==="Lots of effort") {%>  selected="selected"  <%}%> value="Lots of effort">Lots of effort</option>
+          <% }else{ %>
+            <option value="">Cath Friendly</option>
+            <option value="">Some Effort</option>
+            <option value="">Lots of Effort</option>
+          <% } %>
+        </select>
+      </div>
 
-    <div class="form-page-div">
-      <label for="">Time:</label>
-      <select class="" name="">
-        <option value="">
-          <30 mins</option>
-        <option value="">30-60 mins</option>
-        <option value="">>60 mins</option>
-      </select>
-    </div>
+      <div class="form-page-div">
+        <label for="">Time:</label>
+        <select class="" name="time">
+          <% if(entryInfo.recipe!==undefined&&entryInfo.recipe!==null){ %>
+            <option <%if (entryInfo.recipe.time==="<30 mins") {%>  selected="selected"  <%}%> value="<30 mins"><30 mins</option>
+            <option <%if (entryInfo.recipe.time==="30-60 mins") {%>  selected="selected"  <%}%> value="30-60 mins">30-60 mins</option>
+            <option <%if (entryInfo.recipe.time===">60 mins") {%>  selected="selected"  <%}%> value=">60 mins">>60 mins</option>
+          <% }else{ %>
+            <option value=""> <30 mins </option>
+            <option value="">30-60 mins</option>
+            <option value="">>60 mins</option>
+          <% } %>
+        </select>
+      </div>
+
+      <div class="form-page-div">
+        <button type="submit" name="button" class="btn btn-secondary">Submit</button>
+      </div>
+
+
+    </form>
 
     <%- include("footer") -%>
   </body>
