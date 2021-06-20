@@ -290,10 +290,10 @@ app.post("/form-entry",(req,res)=>{
     time:req.body.time,
     effort:req.body.effort
   }
-  if(req.body.entry_id!=="N/A"&&req.body.entry_id===null&&req.body.entry_id!==undefined){
+  if(req.body.entry_id!=="N/A"&&req.body.entry_id!==null&&req.body.entry_id!==undefined){
     Recipe.findByIdAndUpdate(req.body.entry_id,updateObject,(err,result)=>{
       if(!err){
-        console.log("Form succesefully submitted and recipe updated");
+        console.log("Form successfully submitted and recipe updated");
         res.redirect("/")
       }else{
         console.log(err);
