@@ -55,15 +55,23 @@ exports.fetchBooks = function(sourcedb){
 exports.getEntryInfo = (date,entrydb,meal)=>{
   let tomorrow = new Date();
   let yesterday = new Date();
+  tomorrow.setHours(1,0,0,0);
+  yesterday.setHours(1,0,0,0);
   tomorrow.setDate(date.getDate()+1);
   yesterday.setDate(date.getDate()-1);
+  console.log(tomorrow);
+  console.log(yesterday);
 
   let newPromise = new Promise((myResolve,myReject)=>{
     entrydb.find({
-      date:{"$gt":yesterday,"$lt":tomorrow},
-      "meal":meal
+      $and: [ { date: { $gt: yesterday } }, { date: { $lt: tomorrow } } ],
+      meal:meal
+      // date:{"$gt":yesterday,"$lt":tomorrow},
+      // "meal":meal,
+      // "active":true
     }).populate('recipe').exec((err,results)=>{
       if(!err){
+        console.log(results);
         if(results.length>0){
           myResolve(results[0]);
         }else{

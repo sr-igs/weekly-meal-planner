@@ -40,6 +40,7 @@
         <% }else{ %>
         <input type="hidden" name="entry_id" value=<%= entryInfo.recipe._id %> >
         <p><%= entryInfo.recipe.name %></p>
+        <p><em><%= entryInfo.recipe.source.alias %>, Page <%= entryInfo.recipe.page %></em></p>
         <% } %>
       </div>
 
