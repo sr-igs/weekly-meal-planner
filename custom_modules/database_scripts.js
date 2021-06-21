@@ -55,10 +55,10 @@ exports.fetchBooks = function(sourcedb){
 exports.getEntryInfo = (date,entrydb,meal)=>{
   let tomorrow = new Date();
   let yesterday = new Date();
-  tomorrow.setHours(1,0,0,0);
-  yesterday.setHours(1,0,0,0);
-  tomorrow.setDate(date.getDate()+1);
-  yesterday.setDate(date.getDate()-1);
+  tomorrow.setDate(date.getDate());
+  tomorrow.setHours(23,59,59,0);
+  yesterday.setDate(date.getDate());
+  yesterday.setHours(0,0,0,0);
   console.log(tomorrow);
   console.log(yesterday);
 
