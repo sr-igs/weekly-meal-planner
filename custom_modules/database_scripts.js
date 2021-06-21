@@ -56,22 +56,24 @@ exports.getEntryInfo = (date,entrydb,meal)=>{
   let tomorrow = new Date();
   let yesterday = new Date();
   tomorrow.setDate(date.getDate());
-  tomorrow.setHours(23,59,59,0);
+  tomorrow.setUTCHours(23,59,59,0);
   yesterday.setDate(date.getDate());
-  yesterday.setHours(0,0,0,0);
-  console.log(tomorrow);
-  console.log(yesterday);
+  yesterday.setUTCHours(0,0,0,0);
+  console.log(tomorrow.toUTCString());
+  console.log(yesterday.toUTCString());
 
   let newPromise = new Promise((myResolve,myReject)=>{
     entrydb.find({
-      $and: [ { date: { $gt: yesterday } }, { date: { $lt: tomorrow } } ],
+      $and: [ { date: { $gte: yesterday } }, { date: { $lt: tomorrow } } ],
       meal:meal
       // date:{"$gt":yesterday,"$lt":tomorrow},
       // "meal":meal,
       // "active":true
     }).populate('recipe').exec((err,results)=>{
       if(!err){
-        console.log(results);
+        results.forEach((result)=>{
+          console.log(result.date.toUTCString());
+        })
         if(results.length>0){
           myResolve(results[0]);
         }else{
