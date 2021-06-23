@@ -4,6 +4,14 @@
   margin-bottom:1rem;
 }
 
+.main-title{
+  font-size:2rem;
+}
+
+.nav-div{
+  padding: 0rem 1rem;
+}
+
 .date-input{
   width: 8.5rem;
 }
@@ -41,6 +49,10 @@
   text-align: center;
 }
 
+.main-thead{
+  background-color:lightgrey;
+}
+
 /* Book Page */
 .book-header, .book-form{
   text-align:center;
@@ -55,6 +67,8 @@
   margin:auto;
   margin-top:2rem;
 }
+
+/* Form Items */
 
 .form-item{
   margin-bottom:0.5rem;
@@ -74,6 +88,7 @@
   margin-top:2rem;
 }
 
-.form-title{
-
+.rtt-div{
+  text-align: center;
+  margin-top:1rem;
 }

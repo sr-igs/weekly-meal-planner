@@ -65,7 +65,8 @@ exports.getEntryInfo = (date,entrydb,meal)=>{
   let newPromise = new Promise((myResolve,myReject)=>{
     entrydb.find({
       $and: [ { date: { $gte: yesterday } }, { date: { $lt: tomorrow } } ],
-      meal:meal
+      meal:meal,
+      active:true
       // date:{"$gt":yesterday,"$lt":tomorrow},
       // "meal":meal,
       // "active":true

@@ -1,118 +1,149 @@
   <%- include("header") -%>
 
-<body>
+  <body>
 
-  <div class="row title-div">
+    <div class="">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+              <form class="" action="/new-week-entry" method="post">
+                <button type="submit" name="button" class="btn btn-light">+ Week</button>
+              </form>
+            </div>
+            <div class="mx-auto order-0">
+                <a class="navbar-brand mx-auto main-title" href="#">Weekly Meal Planner</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".dual-collapse2">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add-book">Books</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/form">Form</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search">Search</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    </div>
+
+    <!-- <div class="row title-div"> -->
     <!-- Nav bar -->
-    <div class="col">
-      <form class="" action="/new-week-entry" method="post">
-        <button type="submit" name="button">+ Week</button>
-      </form>
-    </div>
-    <div class="col">
-      <h1>Weekly Meal Planner</h1>
-    </div>
-    <div class="col">
-      <button type="button" name="button">⚙️</button>
-      <a href="/add-book">Add new book</a>
-    </div>
-  </div>
+    <!-- <div class="col">
+        <form class="" action="/new-week-entry" method="post">
+          <button type="submit" name="button">+ Week</button>
+        </form>
+      </div>
+      <div class="col">
+        <h1>Weekly Meal Planner</h1>
+      </div>
+      <div class="col">
+        <button type="button" name="button">⚙️</button>
+        <a href="/add-book">Add new book</a>
+      </div>
+    </div> -->
 
-  <div class="table-div">
-    <!-- Table -->
-    <table class="main-table table">
-      <tr>
-        <thead class="thead-dark">
-        <th>D?</th>
-        <th>Day</th>
-        <th>Weekday</th>
-        <th>Meal</th>
-        <th>In?</th>
-        <th>Source</th>
-        <th>Page</th>
-        <th>Recipe</th>
-        <th>Quality</th>
-        <th>Effort</th>
-        <th>Time</th>
-        </thead>
-      </tr>
-      <% entries.forEach(function(entry){ %>
-      <form class="" action="/table-change" method="post">
+    <div class="table-div">
+      <!-- Table -->
+      <table class="main-table table">
         <tr>
-          <!-- CHECKBOX,DATE,WEEKDAY,MEAL -->
-          <td><input type="checkbox" name="activeCheckbox" value="" onchange="this.form.submit()"></td>
-          <td><input type="date" name="date" value="<%= entry.date.toISOString().split('T')[0] %>" onchange="this.form.submit()" class="date-input"> </td>
-          <td><%= entry.date.toLocaleString('en-us', {  weekday: 'long' })%></td>
-          <td><input type="text" name="meal" value="<%= entry.meal %>" onchange="this.form.submit()" list="lunch-dinner" class="meal-input"></td>
-          <!-- IN OUT CHECKBOX -->
-          <% if(entry.inOut){ %>
-          <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()" checked class="in-out-input"></td>
-          <% }else{ %>
-          <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()" class="in-out-input"></td>
-          <% } %>
-          <!-- SOURCE -->
-          <% if(entry.source!==null&&entry.source!==undefined){ %>
+          <thead class="main-thead">
+            <th>D?</th>
+            <th>Day</th>
+            <th>Weekday</th>
+            <th>Meal</th>
+            <th>In?</th>
+            <th>Source</th>
+            <th>Page</th>
+            <th>Recipe</th>
+            <th>Quality</th>
+            <th>Effort</th>
+            <th>Time</th>
+          </thead>
+        </tr>
+        <% entries.forEach(function(entry){ %>
+        <form class="" action="/table-change" method="post">
+          <tr>
+            <!-- CHECKBOX,DATE,WEEKDAY,MEAL -->
+            <td><input type="checkbox" name="activeCheckbox" value="" onchange="this.form.submit()"></td>
+            <td><input type="date" name="date" value="<%= entry.date.toISOString().split('T')[0] %>" onchange="this.form.submit()" class="date-input"> </td>
+            <td><%= entry.date.toLocaleString('en-us', {  weekday: 'long' })%></td>
+            <td><input type="text" name="meal" value="<%= entry.meal %>" onchange="this.form.submit()" list="lunch-dinner" class="meal-input"></td>
+            <!-- IN OUT CHECKBOX -->
+            <% if(entry.inOut){ %>
+            <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()" checked class="in-out-input"></td>
+            <% }else{ %>
+            <td><input type="checkbox" name="inOut" value="" onchange="this.form.submit()" class="in-out-input"></td>
+            <% } %>
+            <!-- SOURCE -->
+            <% if(entry.source!==null&&entry.source!==undefined){ %>
             <td><input type="text" name="source" value="<%= entry.source.alias %>" onchange="this.form.submit()" list="available-sources" class="source-input in-affected"></td>
-          <% }else{ %>
+            <% }else{ %>
             <td><input type="text" name="source" value="" onchange="this.form.submit()" list="available-sources" class="source-input in-affected"></td>
-          <% } %>
-          <!-- PAGE NUMBER -->
-          <td><input type="number" name="page" value="<%= entry.page %>" onchange="this.form.submit()" class="page-input"></td>
-          <!-- RECIPE ATTRIBUTES:NAME,QUALITY,EFFORT,TIME -->
-          <% if(entry.recipe!==undefined&&entry.recipe!==null){ %>
+            <% } %>
+            <!-- PAGE NUMBER -->
+            <td><input type="number" name="page" value="<%= entry.page %>" onchange="this.form.submit()" class="page-input"></td>
+            <!-- RECIPE ATTRIBUTES:NAME,QUALITY,EFFORT,TIME -->
+            <% if(entry.recipe!==undefined&&entry.recipe!==null){ %>
             <td><input type="text" name="recipe" value="<%= entry.recipe.name %>" onchange="this.form.submit()"></td>
             <td><input type="text" name="quality" value="<%= entry.recipe.quality %>" onchange="this.form.submit()" class="quality-input" list="quality-list"></td>
             <td><input type="text" name="effort" value="<%= entry.recipe.effort %>" onchange="this.form.submit()" class="effort-input" list="effort-list"></td>
             <td><input type="text" name="time" value="<%= entry.recipe.time %>" onchange="this.form.submit()" class="time-input" list="time-list"></td>
-          <% }else{ %>
+            <% }else{ %>
             <td><input type="text" name="recipe" value="" onchange="this.form.submit()"></td>
             <td><input type="text" name="quality" value="" onchange="this.form.submit()" class="quality-input" list="quality-list"></td>
             <td><input type="text" name="effort" value="" onchange="this.form.submit()" class="effort-input" list="effort-list"></td>
             <td><input type="text" name="time" value="" onchange="this.form.submit()" class="time-input" list="time-list"></td>
-          <% } %>
-          <input type="hidden" name="id" value="<%= entry._id %>">
-        </tr>
-      </form>
-      <% }); %>
-    </table>
-  </div>
-
-  <form class="" action="/new-single-entry" method="post">
-    <div class="">
-      <button type="submit" name="button" class="btn btn-secondary add-btn">Add day</button>
+            <% } %>
+            <input type="hidden" name="id" value="<%= entry._id %>">
+          </tr>
+        </form>
+        <% }); %>
+      </table>
     </div>
-  </form>
 
-  <%- include("footer") -%>
+    <form class="" action="/new-single-entry" method="post">
+      <div class="">
+        <button type="submit" name="button" class="btn btn-secondary add-btn">Add day</button>
+      </div>
+    </form>
 
-  <!-- Lists -->
-  <datalist class="" id="available-sources">
-  <% sources.forEach(function(source){ %>
-    <option value="<%= source %>">
-  <% }) %>
-  </datalist>
-  <datalist class="" id="lunch-dinner">
-    <option value="Lunch">
-    <option value="Dinner">
-  </datalist>
-  <datalist class="" id="quality-list">
-    <option value="Not again"></option>
-    <option value="Good"></option>
-    <option value="Very Good"></option>
-    <option value="Outstanding"></option>
-  </datalist>
-  <datalist class="" id="time-list">
-    <option value="<30 mins"></option>
-    <option value="30-60 mins"></option>
-    <option value=">60 mins"></option>
-  </datalist>
-  <datalist class="" id="effort-list">
-    <option value="Cath friendly"></option>
-    <option value="Some effort"></option>
-    <option value="Lots of effort"></option>
-  </datalist>
+    <%- include("footer") -%>
+
+    <!-- Lists -->
+    <datalist class="" id="available-sources">
+      <% sources.forEach(function(source){ %>
+      <option value="<%= source %>">
+        <% }) %>
+    </datalist>
+    <datalist class="" id="lunch-dinner">
+      <option value="Lunch">
+      <option value="Dinner">
+    </datalist>
+    <datalist class="" id="quality-list">
+      <option value="Not again"></option>
+      <option value="Good"></option>
+      <option value="Very Good"></option>
+      <option value="Outstanding"></option>
+    </datalist>
+    <datalist class="" id="time-list">
+      <option value="<30 mins"></option>
+      <option value="30-60 mins"></option>
+      <option value=">60 mins"></option>
+    </datalist>
+    <datalist class="" id="effort-list">
+      <option value="Cath friendly"></option>
+      <option value="Some effort"></option>
+      <option value="Lots of effort"></option>
+    </datalist>
 
 
-</body>
+  </body>
 
-</html>
+  </html>
