@@ -1,0 +1,70 @@
+  <%- include("header") -%>
+  <body>
+  <h1>Search</h1>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-4">
+        <form class="" action="index.html" method="post">
+          <label for="">By Name:</label>
+          <input type="text" name="" value="">
+          <button type="button" name="button">Search</button>
+        </form>
+      </div>
+      <div class="col-6">
+        <form class="" action="/search-by-attributes" method="post">
+            <label for="">Quality:</label>
+            <select class="" name="quality">
+              <option value="Not again">Not again</option>
+              <option value="Good">Good</option>
+              <option value="Very Good" selected="selected">Very Good</option>
+              <option value="Outstanding">Outstanding</option>
+              <option value="none">N/A</option>
+            </select>
+            <label for="">Time:</label>
+            <select class="" name="time">
+              <option value="<30 mins"><30 mins</option>
+              <option value="30-60 mins">30-60 mins</option>
+              <option value=">60 mins">>60 mins</option>
+              <option value="none">N/A</option>
+            </select>
+            <label for="">Effort:</label>
+            <select class="" name="effort">
+              <option value="Cath friendly">Cath friendly</option>
+              <option value="Some effort">Some effort</option>
+              <option value="Lots of effort">Lots of effort</option>
+              <option value="none">N/A</option>
+            </select>
+            <button type="submit" name="button">Search</button>
+        </form>
+      </div>
+      <div class="col-2">
+        <a href="/">Return home</a>
+      </div>
+    </div>
+  </div>
+
+  <table class="table">
+    <tr>
+      <th>Source</th>
+      <th>Page</th>
+      <th>Recipe</th>
+      <th>Quality</th>
+      <th>Effort</th>
+      <th>Time</th>
+    </tr>
+    <% foundEntries.forEach((entry)=>{ %>
+        <tr>
+        <td><%=entry.source.alias%></td>
+        <td><%=entry.page%></td>
+        <td><%=entry.name%></td>
+        <td><%=entry.quality%></td>
+        <td><%=entry.effort%></td>
+        <td><%=entry.time%></td>
+          </tr>
+      <% }) %>
+
+  </table>
+
+
+  <%- include("footer") -%>
+  </body>

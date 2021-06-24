@@ -88,3 +88,31 @@ exports.getEntryInfo = (date,entrydb,meal)=>{
   });
   return newPromise;
 }
+
+exports.getRecipesByAttr = (recipedb,quality,time,effort)=>{
+  //Build query
+  let query = {};
+  if(quality!=="none"){
+    query.quality=quality;
+  };
+  if(time!=="none"){
+    query.time=time;
+  };
+  if(effort!=="none"){
+    query.effort=effort
+  }
+  console.log(query);
+
+  let promise = new Promise((myResolve,myReject)=>{
+    recipedb.find(query,(err,results)=>{
+      if(!err){
+        myResolve(results);
+      }else{
+        console.log(err);
+        myReject();
+      }
+    })
+
+  });
+  return promise
+}

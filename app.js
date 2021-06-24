@@ -305,6 +305,20 @@ app.post("/form-entry",(req,res)=>{
   }
 })
 
+app.get("/search",(req,res)=>{
+  res.render("search",{foundEntries:[]})
+})
+
+app.post("/search-by-attributes",(req,res)=>{
+  console.log(req.body);
+  let promise = databaseOps.getRecipesByAttr(Recipe,req.body.quality,req.body.time,req.body.effort);
+  promise.then((value)=>{
+    console.log(value);
+    res.render("search",{foundEntries:value})
+  })
+
+})
+
 let port = process.env.PORT;
 if(port==null||port==""){
   port=3000;
