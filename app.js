@@ -88,26 +88,33 @@ app.post("/new-week-entry",function(req,res){
 
 function addDate(chosenMeal="Dinner",mealOverride=false,dateOverride=false,date=new Date){
   let promise = new Promise(function(myResolve,myReject){
-    Entry.aggregate([
-    {
-      "$group":{
-        "_id":null,
-        "date":{"$max":"$date"}
+    // db.collection.find().sort({age:-1}).limit(1)
+    Entry.find({active:true}).sort({date:-1}).limit(1).exec((err,result)=>{
+      console.log(result[0].date);
+      console.log(date);
+
+      if(result.length>0&&!dateOverride){
+        date = new Date(result[0].date);
+        date.setDate(date.getDate()+1);
       }
-    }
-  ]).exec(function(err,result){
-    let newEntry = new Entry({
-      date:date,
-      active:true,
-      inOut:true,
-      meal:chosenMeal
-    });
-    if(result.length>0&&!dateOverride){
-      newEntry.date.setDate(result[0].date.getDate()+1);
-    }
+
+      let newEntry = new Entry({
+        active:true,
+        inOut:true,
+        date:date,
+        meal:chosenMeal
+      });
+
+      if(result.length>0&&!dateOverride){
+        let dateToMod = result[0].date;
+        newEntry.date.setDate(dateToMod.getDate()+1);
+        console.log(newEntry.date);
+      }
+
       if((newEntry.date.getDay()===6||newEntry.date.getDay()===0)&&!mealOverride){
         newEntry.meal = "Lunch";
       };
+
       newEntry.save();
       dateAdded = newEntry.date;
       myResolve();
