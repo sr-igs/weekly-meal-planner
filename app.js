@@ -55,22 +55,15 @@ app.post("/new-single-entry",function(req,res){
 });
 
 app.post("/new-week-entry",function(req,res){
-    Entry.aggregate([
-      {
-        "$group":{
-           "_id":null,
-          "date":{"$max":"$date"}
-        }
-      }
-    ]).exec(function(err,result){
+  Entry.find({active:true}).sort({date:-1}).limit(1).exec(function(err,result){
       let lastDate = new Date();
       if(result[0]!==null&&result[0]!==undefined){
-        lastDate = result[0].date;
+        lastDate = new Date(result[0].date);
       };
       let daysToAdd = 7;
       let promises = [];
       for(var i=0;i<daysToAdd;i++){
-        let newDate = new Date();
+        let newDate = new Date(result[0].date);
         newDate.setDate(lastDate.getDate()+1+i);
         console.log(newDate);
         let new_promise = addDate("Dinner",false,true,newDate);
