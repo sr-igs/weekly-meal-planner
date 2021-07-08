@@ -89,7 +89,7 @@ exports.getEntryInfo = (date,entrydb,meal)=>{
   return newPromise;
 }
 
-exports.getRecipesByAttr = (recipedb,quality,time,effort)=>{
+exports.getRecipesByAttr = (recipedb,quality,time,effort,name)=>{
   //Build query
   let query = {};
   if(quality!=="none"){
@@ -100,6 +100,9 @@ exports.getRecipesByAttr = (recipedb,quality,time,effort)=>{
   };
   if(effort!=="none"){
     query.effort=effort
+  };
+  if(name!=="none"){
+    query.name= {$regex:name,$options:"i"}
   }
   console.log(query);
 

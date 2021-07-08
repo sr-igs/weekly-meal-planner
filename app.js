@@ -310,13 +310,20 @@ app.get("/search",(req,res)=>{
 })
 
 app.post("/search-by-attributes",(req,res)=>{
-  console.log(req.body);
-  let promise = databaseOps.getRecipesByAttr(Recipe,req.body.quality,req.body.time,req.body.effort);
+  let promise = databaseOps.getRecipesByAttr(Recipe,req.body.quality,req.body.time,req.body.effort,"none");
   promise.then((value)=>{
     console.log(value);
     res.render("search",{foundEntries:value})
   })
+})
 
+app.post("/search-by-name",(req,res)=>{
+  let name = req.body.search_text
+  //let names = [_.lowerCase(name),_.startCase(name)];
+  let promise = databaseOps.getRecipesByAttr(Recipe,"none","none","none",name);
+  promise.then((value)=>{
+    res.render("search",{foundEntries:value})
+  })
 })
 
 let port = process.env.PORT;
